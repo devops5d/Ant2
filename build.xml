@@ -1,0 +1,70 @@
+<project name="MyApplication" default="archive" basedir=".">
+
+    <property file = "build.properties"/>
+    <description>
+        simplest example build file
+    </description>
+    <!-- set global properties for this build -->
+    <property name="src" location="src" />
+    <property name="build" location="build" />
+    <property name="dist" location="dist" />
+    <property name="conf" location="conf" />
+    <property name="version" value="1.0" />
+
+
+    <path id="build.classpath">
+      <fileset dir="WebContent/WEB-INF/">
+        <include name="lib/*.jar"/>
+      </fileset>
+    </path>
+
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp />
+        <!-- Create the build directory structure used by compile -->
+        <mkdir dir="${build}/META-INF" />
+        <mkdir dir="${conf}" />
+    </target>
+
+    <target name="compile" depends="init" description="compile the source">
+        <!-- Compile the java code from ${  src} into ${build} -->
+	<mkdir dir="${dist}/lib" />
+        <javac srcdir="${src}" destdir="${build}">
+	  <classpath refid="build.classpath"/>
+	</javac>
+    </target>
+
+    <target name="jar1" depends="compile" description="create the Main JAR file">
+        <buildnumber />
+        <!-- Put everything in ${build} into the Main-${version}.${build.number}.jar -->
+        <jar destfile="${dist}/lib/jar1.jar" basedir="${build}" excludes = "com/devopsapplications, com/devops"/>
+    </target>
+
+    <target name="jar2" depends="compile, jar1" description="generate the distribution">
+        <buildnumber />
+        <!-- Put everything in ${build} into the MyApplication-${version}.${build.number}.jar -->
+        <jar destfile="${dist}/lib/jar2.jar" basedir="${build}" excludes = "com/devopsapi, com/devops" />
+    </target>
+
+    <target name="war" depends="jar1, jar2" description="War file genration">
+	
+        <war destfile="dist/lib/HelloWeb.war" webxml="WebContent/WEB-INF/web.xml" excludes = "com/devopsapi, com/devopsapplications">
+            <fileset dir="WebContent"/>
+            <lib dir="WebContent/WEB-INF/lib"/>
+            <classes dir="build/classes"/>
+        </war>
+    </target>
+
+    <target name="archive" depends="war" description="Enterprise archive file">
+        <ear destfile="${dist}/lib/DevopsWeb.ear" appxml="${conf}/application.xml">
+            <metainf dir="${build}/META-INF"/>
+            <fileset dir="${dist}/lib" includes="*jar,*.war"/>
+        </ear>
+    </target>
+
+    <target name="clean" description="clean up">
+        <!-- Delete the ${build} and ${dist} directory trees -->
+        <delete dir="${build}" />
+        <delete dir="${dist}" />
+    </target>
+</project>
