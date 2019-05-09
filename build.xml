@@ -2,7 +2,7 @@
 
     <property file = "build.properties"/>
     <description>
-        simplest example build file
+        simplest example build file ef2e2
     </description>
     <!-- set global properties for this build -->
     <property name="src" location="src" />
