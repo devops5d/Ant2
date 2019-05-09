@@ -48,7 +48,7 @@
 
     <target name="war" depends="jar1, jar2" description="War file genration">
 	
-        <war destfile="dist/lib/HelloWeb.war" webxml="WebContent/WEB-INF/web.xml" excludes = "com/devopsapi, com/devopsapplications">
+        <war destfile="dist/lib/DevopsWeb.war" webxml="WebContent/WEB-INF/web.xml" excludes = "com/devopsapi, com/devopsapplications">
             <fileset dir="WebContent"/>
             <lib dir="WebContent/WEB-INF/lib"/>
             <classes dir="build/classes"/>
